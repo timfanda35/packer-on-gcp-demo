@@ -1,0 +1,32 @@
+{
+    "variables": {
+      "project_id": "{{env `GCP_PROJECT_ID`}}",
+      "region": "asia-east1",
+      "zone": "asia-east1-b"
+    },
+    "builders": [
+      {
+        "type": "googlecompute",
+        "project_id": "{{user `project_id`}}",
+        "image_name": "nginx-demo-{{timestamp}}",
+        "source_image": "centos-7-v20191210",
+        "ssh_username": "packer",
+        "zone": "{{user `zone`}}"
+      }
+    ],
+    "provisioners": [
+      {
+        "type": "shell",
+        "inline": ["sudo yum install -y nginx && sudo systemctl enable nginx"]
+      },
+      {
+        "type": "file",
+        "source": "./index.html",
+        "destination": "/tmp/index.html"
+      },
+      {
+        "type": "shell",
+        "inline": ["sudo mv /tmp/index.html /usr/share/nginx/html/index.html"]
+      }
+    ]
+  }
