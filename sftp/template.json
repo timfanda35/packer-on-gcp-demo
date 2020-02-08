@@ -1,0 +1,46 @@
+{
+    "variables": {
+      "project_id": "{{env `GCP_PROJECT_ID`}}",
+      "region": "asia-east1",
+      "zone": "asia-east1-b"
+    },
+    "builders": [
+      {
+        "type": "googlecompute",
+        "project_id": "{{user `project_id`}}",
+        "image_name": "sftp-demo-{{timestamp}}",
+        "source_image_family": "centos-7",
+        "ssh_username": "packer",
+        "zone": "{{user `zone`}}"
+      }
+    ],
+    "provisioners": [
+      {
+        "type": "shell",
+        "inline": ["sudo yum update -y && sudo yum install -y samba"]
+      },
+      {
+        "type": "file",
+        "source": "./scripts",
+        "destination": "/tmp/scripts"
+      },
+      {
+        "type": "shell",
+        "inline": [
+          "sudo chmod +x /tmp/scripts/setup.sh",
+          "/tmp/scripts/setup.sh"
+        ]
+      },
+      {
+        "type": "shell",
+        "environment_vars": [
+          "EXPORTER_PASS={{user `logexporter_pass`}}",
+          "VIEWER_PASS={{user `logviewer_pass`}}"
+        ],
+        "inline": [
+          "echo $EXPORTER_PASS | sudo passwd --stdin logexporter",
+          "echo $VIEWER_PASS | sudo passwd --stdin logviewer"
+        ]
+      }
+    ]
+  }
