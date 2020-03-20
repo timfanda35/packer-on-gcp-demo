@@ -14,5 +14,5 @@ export VIEWER_PASS='@12AAbbCCdd90'
 packer build \
   -var "logexporter_pass=$EXPORTER_PASS" \
   -var "logviewer_pass=$VIEWER_PASS" \
-  template.json
+  packer.json
 ```
