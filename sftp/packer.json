@@ -16,10 +16,6 @@
     ],
     "provisioners": [
       {
-        "type": "shell",
-        "inline": ["sudo yum update -y && sudo yum install -y samba"]
-      },
-      {
         "type": "file",
         "source": "./scripts",
         "destination": "/tmp/scripts"
